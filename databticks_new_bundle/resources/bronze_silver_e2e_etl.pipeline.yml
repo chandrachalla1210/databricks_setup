@@ -1,0 +1,20 @@
+# The main pipeline for databticks_new_bundle
+
+resources:
+  pipelines:
+    bronze_silver_e2e_etl:
+      name: bronze_silver_e2e
+      configuration:
+        catalog_name: ${var.catalog}
+      libraries:
+        - glob:
+            include: ../src/dlt_pipelines/bronze_to_silver/transformations/**
+      schema: silver
+      continuous: false
+      development: false
+      photon: true
+      channel: CURRENT
+      catalog: ${var.catalog}
+      serverless: true
+      root_path: ../src/dlt_pipelines/bronze_to_silver
+
