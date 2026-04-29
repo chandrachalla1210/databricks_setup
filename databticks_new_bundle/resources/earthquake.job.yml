@@ -1,0 +1,22 @@
+resources:
+  jobs:
+    dev_earthquake_e2e_job:
+      name: dev_earthquake_e2e_job
+      tasks:
+        - task_key: Ingestion_to_bronze
+          notebook_task:
+            notebook_path: ../src/notebooks/bronze_ingestion.ipynb
+            base_parameters:
+              catalog_name: ${var.catalog}
+            source: WORKSPACE
+        - task_key: bronze_silver_earthquake
+          depends_on:
+            - task_key: Ingestion_to_bronze
+          pipeline_task:
+            pipeline_id: ${resources.pipelines.bronze_silver_e2e_etl.id}
+      queue:
+        enabled: true
+      parameters:
+        - name: catalog_name
+          default: ${var.catalog}
+      performance_target: PERFORMANCE_OPTIMIZED
